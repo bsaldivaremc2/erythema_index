@@ -183,10 +183,12 @@ Calculate the EI quickly. cei.EI has the numpy array that contains the EI values
 
 
 ```python
-cei.calc_EI(v=False)
+eim = cei.calc_EI(v=False)
+print("EI mean:",eim)
 print("EI mean:",cei.EI_mean)
 ```
 
+    EI mean: 33.9863616458
     EI mean: 33.9863616458
 
 
@@ -240,4 +242,39 @@ cei.show_ei_image()
 
 
 ![png](output_15_0.png)
+
+### Calculate the Hemoglobin/Haemoglobin 
+
+To predict the Hb select a predictor method PCI, PCLX5 and FCLX5:  
+* 'PCI':  
+ * 'name':'Palpebral conjunctival EI (Iphone)',  
+ * 'coef':1.38471542,  
+ * 'intercept':70.118455,
+ * 'r2 score': 0.346012,
+* 'PCLX5':
+ * 'name':'Palpebral conjunctival EI (LX5)',
+ * 'coef':2.92842233,
+ * 'intercept':57.647633,
+ * 'r2 score': 0.270722,
+* 'FCLX5':
+ * 'name':'Forniceal conjunctival EI (LX5)',
+ * 'coef':2.18110503,
+ * 'intercept':84.138215,
+ * 'r2_score':0.088311}
+These values were computed using the data present in the paper and applying linear regression.
+        
+Output scale is by default in 'g/L'. You can set it to 'g/dL' 
+
+```python
+predictors = ['PCI','PCLX5','FCLX5']
+output_scale='g/dL'
+for predictor in predictors:
+    hbx = cei.get_hb(predictor=predictor,output_scale=output_scale)
+    print(predictor,hbx,output_scale)
+```
+
+    PCI 11.7179894041 g/dL
+    PCLX5 15.7174053359 g/dL
+    FCLX5 15.8266039337 g/dL
+
 
