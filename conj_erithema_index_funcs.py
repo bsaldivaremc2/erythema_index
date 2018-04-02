@@ -215,3 +215,36 @@ def calibration_ei_image(df,file_name_column,square_poly_col,conj_poly_col,
     if v==True:
         print_stats(EI_conj,name="EI conj")
     return [img_np,EI,output]
+def ei_to_hb(iei,predictor='PCI',output_scale='g/L'):
+    """
+    Predict the Hemoglobin (Hb) levels given the Erythema index (EI).
+    To predict the Hb select a predictor method PCI, PCLX5 and FCLX5:
+    *'PCI':
+    **'name':'Palpebral conjunctival EI (Iphone)',
+    **'coef':1.38471542,
+    **'intercept':70.118455,
+    **'r2 score': 0.346012,
+    *'PCLX5':
+    **'name':'Palpebral conjunctival EI (LX5)',
+    **'coef':2.92842233,
+    **'intercept':57.647633,
+    **'r2 score': 0.270722,
+    *'FCLX5':
+    **'name':'Forniceal conjunctival EI (LX5)',
+    **'coef':2.18110503,
+    **'intercept':84.138215,
+    **'r2_score':0.088311}
+    These values were computed using the data present in the paper and applying linear regression.
+    
+    Output scale is by default in 'g/L'. You can set it to 'g/dL' 
+    """
+    pred_params = {
+    'PCI':{'name':'Palpebral conjunctival EI (Iphone)','coef':1.38471542,'intercept':70.118455,'r2_score':0.346012},
+    'PCLX5':{'name':'Palpebral conjunctival EI (LX5)','coef':2.92842233,'intercept':57.647633,'r2_score':0.270722},
+    'FCLX5':{'name':'Forniceal conjunctival EI (LX5)','coef':2.18110503,'intercept':84.138215,'r2_score':0.088311}
+    }
+    pred=pred_params[predictor]
+    hb = iei*pred['coef']+pred['intercept']
+    if output_scale=='g/dL':
+        hb=hb/10
+    return hb
